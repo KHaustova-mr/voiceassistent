@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("метод onSend()");
         String text = questionText.getText().toString();
         String answer = "Вопрос понял Думаю…";
-        chatWindow.setText("Какой-то текст");//проблема здесь
+        chatWindow.setText("Вопрос понял, думаю...");//проблема здесь
         //почему-то chatWindow не появляется текст
         //сам onClick работает видно в консоли эту строку писала я, надо гуглить тогда как присвоить значение в текст вью др способом
     }
