@@ -2,6 +2,8 @@ package com.example.voiceassistent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -10,27 +12,32 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.voiceassistent.model.Message;
+
+import java.io.Console;
 import java.util.Locale;
 import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     protected Button sendButton;
     protected EditText questionText;
-    protected TextView chatWindow;
+    protected RecyclerView chatMessageList;
     protected TextToSpeech textToSpeech;
     protected boolean ttsEnabled;
+    protected MessageListAdapter messageListAdapter;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("chatText", chatWindow.getText().toString());
+//        outState.putString("chatText", chatMessageList.getText().toString());
         outState.putString("inputText", questionText.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        chatWindow.setText(savedInstanceState.getString("chatText"));
+//        chatMessageList.setText(savedInstanceState.getString("chatText"));
         questionText.setText(savedInstanceState.getString("inputText"));
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -41,7 +48,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sendButton = findViewById(R.id.sendButton);
         questionText = findViewById(R.id.questionField);
-        chatWindow = findViewById(R.id.chatWindow);
+        chatMessageList = findViewById(R.id.chatMessageList);
+        messageListAdapter = new MessageListAdapter();
+        chatMessageList.setLayoutManager(new LinearLayoutManager(this));
+        chatMessageList.setAdapter(messageListAdapter);
+
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -75,16 +86,19 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onSend() {
         String text = questionText.getText().toString();
-        chatWindow.append(">> " + text + "\n");
+        messageListAdapter.messageList.add(new Message(text, true));
+        messageListAdapter.notifyDataSetChanged();
+        chatMessageList.scrollToPosition(messageListAdapter.messageList.size()-1);
         questionText.setText("");
         AI.getAnswer(text, new Consumer<String>() {
             @Override
             public void accept(String answer) {
-                chatWindow.append("<< " + answer + "\n");
+                messageListAdapter.messageList.add(new Message(answer, false));
+                messageListAdapter.notifyDataSetChanged();
+                chatMessageList.scrollToPosition(messageListAdapter.messageList.size()-1);
                 if(ttsEnabled)
                     textToSpeech.speak(answer, TextToSpeech.QUEUE_FLUSH,null, null );
             }
         });
-
     }
 }

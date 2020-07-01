@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Голосовий помічник</string>
+    <string name="button_send_name">Надіслати</string>
+    <string name="input_placeholder">Задайте питання</string>
+    <string name="description_image_assistent">Фото асистента</string>
+    <string name="name_assistent">Асистент</string>
+    <string name="name_user">Користувач</string>
+    <string name="default_time">10:00</string>
+    <string name="default_text">Текст</string>
+</resources>
