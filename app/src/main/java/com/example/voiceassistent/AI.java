@@ -1,20 +1,19 @@
 package com.example.voiceassistent;
 
-import android.os.Build;
+import android.os.AsyncTask;
 
-import androidx.annotation.RequiresApi;
-
-import com.example.voiceassistent.Translate.TranslateToString;
-import com.example.voiceassistent.forecast.Forecast;
+import com.example.voiceassistent.parse.ParsingHtmlService;
+import com.example.voiceassistent.translate.TranslateToString;
 import com.example.voiceassistent.forecast.ForecastToString;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -37,6 +36,7 @@ public class AI {
             put("сколько дней до нового года", 3);
             put("погода в городе", 4);
             put("переведи", 5);
+            put("праздники", 6);
         }
     };
 
@@ -86,7 +86,6 @@ public class AI {
                                     callback.accept(text);
                                 }
                             });
-
                         }
                     });
                 }else {
@@ -107,7 +106,80 @@ public class AI {
                 }
                 else callback.accept("Я не понял");
             }break;
+            case 6:{
+                List<String> inputStringDateList = new ArrayList<>();
+                DateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy");
+                Pattern translPattern = Pattern.compile("праздники (.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = translPattern.matcher(question);
+                if (matcher.find()) {
+                    final String[] text = {matcher.group(1)};
+                    String [] inputStringArray = text[0].split(",");
+                    for (int i = 0; i < inputStringArray.length; i++){
+                        inputStringArray[i] = inputStringArray[i].trim();
+                        Date inputDate = getDate(inputStringArray[i]);
+                        if(inputDate != null)
+                            inputStringDateList.add(dateFormat.format(inputDate));
+                    }
+                }
+                else{
+                    inputStringDateList.add(dateFormat.format(new Date()));
+                }
+                if(!inputStringDateList.isEmpty()) {
+                    new AsyncTask<String, Integer, Void>() {
+                        String answer;
+
+                        @Override
+                        protected Void doInBackground(String... strings) {
+                            answer = "";
+                            for(int i = 0; i < strings.length; i++){
+                                if(i != 0) answer += "\n\n";
+                                answer += "Праздники на " + strings[i] + "\n";
+                                answer += ParsingHtmlService.getHoliday(strings[i]);
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            callback.accept(answer);
+                            super.onPostExecute(aVoid);
+                        }
+                    }.execute(inputStringDateList.toArray(new String[0]));
+                } else callback.accept("Не понял, какой вы день или дни имели ввиду");
+            }break;
         }
+    }
+
+    private static Date getDate(String inputDate){
+        System.out.println(inputDate);
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            System.out.println(dateFormat.parse(inputDate));
+            return dateFormat.parse(inputDate);
+        } catch (ParseException e) {}
+
+        dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+        try {
+            return dateFormat.parse(inputDate);
+        } catch (ParseException e) {}
+
+        inputDate = inputDate.toLowerCase();
+
+        if(inputDate.equals("сегодня"))
+            return new Date();
+
+        if(inputDate.equals("завтра"))
+            return calculateDateFromNow(1);
+
+        if(inputDate.equals("вчера"))
+            return calculateDateFromNow(-1);
+        return null;
+    }
+
+    private static Date calculateDateFromNow(int num) {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, num);
+        return cal.getTime();
     }
 
 

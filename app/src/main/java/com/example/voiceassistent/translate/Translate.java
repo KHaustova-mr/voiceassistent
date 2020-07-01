@@ -1,4 +1,4 @@
-package com.example.voiceassistent.Translate;
+package com.example.voiceassistent.translate;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

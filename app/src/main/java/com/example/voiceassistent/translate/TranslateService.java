@@ -1,4 +1,4 @@
-package com.example.voiceassistent.Translate;
+package com.example.voiceassistent.translate;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
