@@ -3,16 +3,16 @@ package com.example.voiceassistent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.Console;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     protected Button sendButton;
@@ -75,11 +75,16 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onSend() {
         String text = questionText.getText().toString();
-        String answer = AI.getAnswer(text);
         chatWindow.append(">> " + text + "\n");
-        chatWindow.append("<< " + answer + "\n");
-        if(ttsEnabled)
-            textToSpeech.speak(answer, TextToSpeech.QUEUE_FLUSH,null, null );
         questionText.setText("");
+        AI.getAnswer(text, new Consumer<String>() {
+            @Override
+            public void accept(String answer) {
+                chatWindow.append("<< " + answer + "\n");
+                if(ttsEnabled)
+                    textToSpeech.speak(answer, TextToSpeech.QUEUE_FLUSH,null, null );
+            }
+        });
+
     }
 }
