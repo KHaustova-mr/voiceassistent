@@ -2,6 +2,8 @@ package com.example.voiceassistent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -11,26 +13,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.voiceassistent.model.Message;
+
 import java.io.Console;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     protected Button sendButton;
     protected EditText questionText;
-    protected TextView chatWindow;
+    protected RecyclerView chatMessageList;
     protected TextToSpeech textToSpeech;
     protected boolean ttsEnabled;
+    protected MessageListAdapter messageListAdapter;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("chatText", chatWindow.getText().toString());
+//        outState.putString("chatText", chatMessageList.getText().toString());
         outState.putString("inputText", questionText.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        chatWindow.setText(savedInstanceState.getString("chatText"));
+//        chatMessageList.setText(savedInstanceState.getString("chatText"));
         questionText.setText(savedInstanceState.getString("inputText"));
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -38,10 +43,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         sendButton = findViewById(R.id.sendButton);
         questionText = findViewById(R.id.questionField);
-        chatWindow = findViewById(R.id.chatWindow);
+        chatMessageList = findViewById(R.id.chatMessageList);
+        messageListAdapter = new MessageListAdapter();
+        chatMessageList.setLayoutManager(new LinearLayoutManager(this));
+        chatMessageList.setAdapter(messageListAdapter);
+
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -76,8 +86,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onSend() {
         String text = questionText.getText().toString();
         String answer = AI.getAnswer(text);
-        chatWindow.append(">> " + text + "\n");
-        chatWindow.append("<< " + answer + "\n");
+//        chatMessageList.append(">> " + text + "\n");
+//        chatMessageList.append("<< " + answer + "\n")
+        messageListAdapter.messageList.add(new Message(text, true));
+        messageListAdapter.messageList.add(new Message(answer, false));
+        messageListAdapter.notifyDataSetChanged();
+        chatMessageList.scrollToPosition(messageListAdapter.messageList.size()-1);
         if(ttsEnabled)
             textToSpeech.speak(answer, TextToSpeech.QUEUE_FLUSH,null, null );
         questionText.setText("");
