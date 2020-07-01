@@ -5,4 +5,5 @@
     <dimen name="chat_window_text_size">18sp</dimen>
     <dimen name="margin_image_view">8dp</dimen>
     <dimen name="image_view_width">60dp</dimen>
+    <dimen name="padding_text_message">10dp</dimen>
 </resources>

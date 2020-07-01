@@ -28,6 +28,8 @@
         android:layout_marginRight="@dimen/layout_margin"
         android:background="@drawable/assistant_bubble"
         android:padding="@dimen/layout_padding"
+        android:paddingStart="@dimen/padding_text_message"
+        android:paddingEnd="@dimen/padding_text_message"
         android:text="@string/default_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

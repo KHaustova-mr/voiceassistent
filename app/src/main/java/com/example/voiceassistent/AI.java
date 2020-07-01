@@ -30,9 +30,9 @@ public class AI {
 
     private static final Map<String, Integer> commands = new HashMap<String, Integer>(){
         {
-            put("какой сегодня день", 0);
+            put("какой день", 0);
             put("который час", 1);
-            put("какой день недели сейчас", 2);
+            put("какой день недели", 2);
             put("сколько дней до нового года", 3);
             put("погода в городе", 4);
         }

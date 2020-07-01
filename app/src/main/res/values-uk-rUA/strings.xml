@@ -4,6 +4,7 @@
     <string name="button_send_name">Надіслати</string>
     <string name="input_placeholder">Задайте питання</string>
     <string name="description_image_assistent">Фото асистента</string>
+    <string name="description_image_user">Фото Надіслати</string>
     <string name="name_assistent">Асистент</string>
     <string name="name_user">Користувач</string>
     <string name="default_time">10:00</string>

@@ -3,6 +3,7 @@
     <string name="button_send_name">Send</string>
     <string name="input_placeholder">Ask a question</string>
     <string name="description_image_assistent">Photo Assistant</string>
+    <string name="description_image_user">Photo User</string>
     <string name="name_assistent">Assistant</string>
     <string name="name_user">User</string>
     <string name="default_time">10:00</string>
