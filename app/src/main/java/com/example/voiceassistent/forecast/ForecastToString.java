@@ -20,7 +20,7 @@ public class ForecastToString {
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast result = response.body();
                 if (result!=null && result.current != null) {
-                    String answer = "сейчас где-то " + result.current.temperature + " градуса " + " и " + result.current.weather_descriptions.get(0);
+                    String answer = "Сейчас где-то " + result.current.temperature + " " + getEndingOfNumber(result.current.temperature, "градус", "градуса", "градусов") + " и " + result.current.weather_descriptions.get(0).toLowerCase();
                     callback.accept(answer);
                 }
                 else
@@ -33,5 +33,18 @@ public class ForecastToString {
                 callback.accept("Не могу узнать погоду");
             }
         });
+    }
+
+    private static String getEndingOfNumber(int number, String oneObject, String twoObjects, String manyObjects){
+        if(number < 0)
+            number *= (-1);
+        number %= 100;
+        if(number > 19)
+            number %= 10;
+        switch (number){
+            case 1: return oneObject;
+            case 2: case 3: case 4: return twoObjects;
+            default: return manyObjects;
+        }
     }
 }

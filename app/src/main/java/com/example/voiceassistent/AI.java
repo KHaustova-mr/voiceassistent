@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.voiceassistent.Translate.TranslateToString;
 import com.example.voiceassistent.forecast.Forecast;
 import com.example.voiceassistent.forecast.ForecastToString;
 
@@ -35,6 +36,7 @@ public class AI {
             put("какой день недели", 2);
             put("сколько дней до нового года", 3);
             put("погода в городе", 4);
+            put("переведи", 5);
         }
     };
 
@@ -77,13 +79,33 @@ public class AI {
                     String cityName = matcher.group(1);
                     ForecastToString.getForecast(cityName, new Consumer<String>() {
                         @Override
-                        public void accept(String s) {
-                            callback.accept(s);
+                        public void accept(String answer) {
+                            TranslateToString.getTranslate(answer, new Consumer<String>() {
+                                @Override
+                                public void accept(String text) {
+                                    callback.accept(text);
+                                }
+                            });
+
                         }
                     });
                 }else {
                     callback.accept("Вы не ввели город");
                 }
+            }break;
+            case 5:{
+                Pattern translPattern = Pattern.compile("переведи (.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = translPattern.matcher(question);
+                if (matcher.find()) {
+                    final String[] text = {matcher.group(1)};
+                    TranslateToString.getTranslate(text[0], new Consumer<String>() {
+                        @Override
+                        public void accept(String text) {
+                            callback.accept(text);
+                        }
+                    });
+                }
+                else callback.accept("Я не понял");
             }break;
         }
     }
@@ -94,10 +116,10 @@ public class AI {
     }
 
     public static void getAnswer(String question, final Consumer<String> callback){
-        question = toNormalForm(question);
+        String questionNormal = toNormalForm(question);
 
         for (Map.Entry<String, String> answer : answers.entrySet()){
-            if(question.contains(answer.getKey())){
+            if(questionNormal.contains(answer.getKey())){
                 callback.accept(answer.getValue());
                 return;
             }
@@ -105,13 +127,12 @@ public class AI {
 
         int idCommand = -1;
         for (Map.Entry<String, Integer> command : commands.entrySet()){
-            if(question.contains(command.getKey())){
+            if(questionNormal.contains(command.getKey())){
                 idCommand = command.getValue();
             }
         }
 
         if(idCommand != -1) {
-
             getAnswerToCommand(idCommand, question, new Consumer<String>() {
                 @Override
                 public void accept(String s) {
@@ -119,7 +140,7 @@ public class AI {
                 }
             });
         }else {
-            callback.accept("Вопрос понял. Думаю...");
+            callback.accept("Не знаю ответ на ваш вопрос");
         }
     }
 }
