@@ -10,17 +10,16 @@
     <TextView
         android:id="@+id/chatWindow"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:gravity="bottom"
         android:paddingLeft="@dimen/layout_padding"
-        android:paddingTop="@dimen/layout_padding"
         android:paddingRight="@dimen/layout_padding"
-        android:text="123456"
         android:textAlignment="gravity"
+        android:textSize="@dimen/chat_window_text_size"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -43,15 +42,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Задайте вопрос"
-            android:inputType="textPersonName" />
+            android:hint="@string/input_placeholder"
+            android:inputType="textPersonName"
+            android:autofillHints="" />
 
         <Button
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Отправить" />
+            android:text="@string/button_send_name" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
