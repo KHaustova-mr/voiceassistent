@@ -43,7 +43,7 @@
         android:layout_marginTop="@dimen/layout_margin"
         android:layout_marginRight="@dimen/layout_margin"
         android:layout_marginBottom="@dimen/layout_margin"
-        android:text="Пользователь"
+        android:text="@string/name_user"
         app:layout_constraintBottom_toTopOf="@+id/messageTextView"
         app:layout_constraintEnd_toStartOf="@+id/avatar_imageView"
         app:layout_constraintHorizontal_bias="1.0"
