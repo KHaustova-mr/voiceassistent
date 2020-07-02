@@ -9,4 +9,6 @@
     <string name="name_user">Пользователь</string>
     <string name="default_time">10:00</string>
     <string name="default_text">Текст</string>
+    <string name="name_night_settings">Ночная тема</string>
+    <string name="name_day_settings">Дневная тема</string>
 </resources>

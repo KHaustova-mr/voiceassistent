@@ -8,4 +8,6 @@
     <string name="name_user">User</string>
     <string name="default_time">10:00</string>
     <string name="default_text">Text</string>
+    <string name="name_night_settings">Night theme</string>
+    <string name="name_day_settings">Daily theme</string>
 </resources>

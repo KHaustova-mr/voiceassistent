@@ -54,8 +54,9 @@ public class AI {
             }break;
             case 2:{
                 Date dateNow = new Date();
-                DateFormat dateFormat = new SimpleDateFormat("E");
-                callback.accept(dateFormat.format(dateNow));
+                DateFormat dateFormat = new SimpleDateFormat("EEEE");
+                String weekday = dateFormat.format(dateNow);
+                callback.accept(Character.toString(weekday.charAt(0)).toUpperCase()+weekday.substring(1));
             }break;
             case 3:{
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
